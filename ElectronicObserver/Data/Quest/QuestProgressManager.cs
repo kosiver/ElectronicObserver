@@ -187,7 +187,6 @@ namespace ElectronicObserver.Data.Quest {
 
 			var quests = KCDatabase.Instance.Quest;
 
-
 			//消えている・達成済みの任務の進捗情報を削除
 			if ( quests.IsLoadCompleted )
 				Progresses.RemoveAll( q => !quests.Quests.ContainsKey( q.QuestID ) || quests[q.QuestID].State == 3 );
@@ -371,19 +370,13 @@ namespace ElectronicObserver.Data.Quest {
 			#region Slaughter
 
 
-			switch ( bm.BattleMode & Battle.BattleManager.BattleModes.BattlePhaseMask ) {
-				case Battle.BattleManager.BattleModes.Normal:
-				case Battle.BattleManager.BattleModes.AirBattle:
-				case Battle.BattleManager.BattleModes.AirRaid:
-				default:
-					if ( bm.BattleNight != null ) hps = bm.BattleNight.ResultHPs;
-					else hps = bm.BattleDay.ResultHPs;
-					break;
-				case Battle.BattleManager.BattleModes.NightOnly:
-				case Battle.BattleManager.BattleModes.NightDay:
-					if ( bm.BattleDay != null ) hps = bm.BattleDay.ResultHPs;
-					else hps = bm.BattleNight.ResultHPs;
-					break;
+			if ( bm.StartsFromDayBattle ) {
+				if ( bm.BattleNight != null ) hps = bm.BattleNight.ResultHPs;
+				else hps = bm.BattleDay.ResultHPs;
+
+			} else {
+				if ( bm.BattleDay != null ) hps = bm.BattleDay.ResultHPs;
+				else hps = bm.BattleNight.ResultHPs;
 			}
 
 			if ( hps == null ) return;

@@ -1008,17 +1008,7 @@ namespace ElectronicObserver.Window {
 		private void UpdateEnemyFleetInstant( bool isPractice = false ) {
 
 			BattleManager bm = KCDatabase.Instance.Battle;
-			BattleData bd;
-
-			switch ( bm.BattleMode & BattleManager.BattleModes.BattlePhaseMask ) {
-				case BattleManager.BattleModes.NightOnly:
-				case BattleManager.BattleModes.NightDay:
-					bd = bm.BattleNight;
-					break;
-				default:
-					bd = bm.BattleDay;
-					break;
-			}
+			BattleData bd = bm.StartsFromDayBattle ? (BattleData)bm.BattleDay : (BattleData)bm.BattleNight;
 
 			int[] enemies = bd.Initial.EnemyMembers;
 			int[][] slots = bd.Initial.EnemySlots;
@@ -1032,7 +1022,7 @@ namespace ElectronicObserver.Window {
             PanelEnemyCandidate.Visible = false;
 
 
-			if ( ( bm.BattleMode & BattleManager.BattleModes.BattlePhaseMask ) != BattleManager.BattleModes.Practice ) {
+			if ( !bm.IsPractice ) {
 				var efcurrent = EnemyFleetRecord.EnemyFleetElement.CreateFromCurrentState();
 				var efrecord = RecordManager.Instance.EnemyFleet[efcurrent.FleetID];
 				if ( efrecord != null ) {
